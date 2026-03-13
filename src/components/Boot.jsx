@@ -61,9 +61,28 @@ export default function Boot({ onComplete }) {
     <div id="boot" className={out ? 'out' : ''} style={bgWhite ? { background: '#fff' } : {}}>
       {!powerOn && (
         <div className="power-overlay" onClick={handlePowerOn}>
-          <div className="power-button">
-            <div className="power-icon">⏻</div>
-            <div className="power-text">INITIALIZE SYSTEM</div>
+          <div className="cyber-grid" />
+          
+          <div className="bracket tl" />
+          <div className="bracket tr" />
+          <div className="bracket bl" />
+          <div className="bracket br" />
+
+          <div className="power-center">
+            <div className="radar-circle"></div>
+            <div className="power-icon-wrapper">
+              <div className="power-icon">TAP</div>
+            </div>
+          </div>
+          
+          <div className="power-text-block">
+            <div className="pt-title">AWAITING AUTHORIZATION</div>
+            <div className="pt-sub">SYSTEM OFFLINE // SECURE CHANNEL</div>
+          </div>
+          
+          <div className="sys-status">
+            USR: UNCLASSIFIED<br />
+            LOC: ANONYMOUS
           </div>
         </div>
       )}
