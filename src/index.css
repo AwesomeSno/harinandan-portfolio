@@ -144,9 +144,25 @@ nav { opacity: 0; animation: fadeUp 1s .5s forwards; pointer-events: all; }
 #tech-panel { top: 50%; right: 3.5rem; transform: translateY(-50%) translateX(20px); width: clamp(300px, 29vw, 420px); padding: 2rem 2rem 1.8rem; transition: opacity .65s, transform .65s; }
 #tech-panel.active { transform: translateY(-50%) translateX(0); }
 .tech-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; margin-top: 1.4rem; background: rgba(232,237,245,.05); border: 1px solid rgba(232,237,245,.07); }
-.tech-cell { padding: 1.1rem .9rem; background: rgba(6,14,26,.65); transition: all .3s; }
-.tech-cell:hover { background: rgba(0,212,255,.08); }
-.tech-icon { font-size: 1.1rem; margin-bottom: .45rem; }
+.tech-cell {
+  padding: 1.1rem 0.9rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: rgba(6, 14, 26, 0.65);
+  transition: background 0.3s ease;
+}
+
+.tech-cell:hover {
+  background: rgba(0, 212, 255, 0.08);
+}
+.tech-icon {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.6rem;
+  color: #00d4ff;
+  filter: drop-shadow(0 0 5px rgba(0, 212, 255, 0.4));
+}
 .tech-name { font-family: var(--mono); font-size: .63rem; font-weight: 400; letter-spacing: .06em; color: var(--text); }
 .tech-level { font-family: var(--mono); font-size: .54rem; font-weight: 300; color: var(--muted); margin-top: .22rem; }
 
