@@ -62,6 +62,7 @@ export default function App() {
       const sec = Math.round(prog * (SECTIONS.length - 1))
       if (sec !== curSecRef.current) {
         flashTransition()
+        soundEngine.playPop()
         curSecRef.current = sec
         setCurrentSection(sec)
       }

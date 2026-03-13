@@ -27,6 +27,10 @@ class SoundEngine {
       wosh: new Howl({
         src: ['/sounds/wosh.mp3'],
         volume: 0.8
+      }),
+      pop: new Howl({
+        src: ['/sounds/pop.mp3'],
+        volume: 0.4
       })
     };
   }
@@ -50,6 +54,11 @@ class SoundEngine {
   playBeep() {
     if (!this.enabled) return;
     this.sounds.beep.play();
+  }
+
+  playPop() {
+    if (!this.enabled) return;
+    this.sounds.pop.play();
   }
 
   playPowerOn() {
