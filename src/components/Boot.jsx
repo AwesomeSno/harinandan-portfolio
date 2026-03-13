@@ -49,8 +49,8 @@ export default function Boot({ onComplete }) {
       const i = idx
       setLines(prev => [...prev, BOOT_LINES[i]])
       timers.push(setTimeout(() => {
-        soundEngine.playBootLine()
         setVisible(prev => new Set([...prev, i]))
+        soundEngine.playBeep()
       }, 16))
       idx++
       timers.push(setTimeout(addLine, idx < 6 ? 160 : 100))

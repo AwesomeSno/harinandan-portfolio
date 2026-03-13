@@ -1,27 +1,45 @@
-import { Howl, Howler } from 'howler'
+import { Howl, Howler } from 'howler';
 
 class SoundEngine {
   constructor() {
     this.enabled = false;
     
+    // Initialize Howls for the different sound effects
     this.sounds = {
-      space: new Howl({ src: ['/sounds/space.mp3'], loop: true, volume: 0 }),
-      tap: new Howl({ src: ['/sounds/tap.mp3'], volume: 0.3 }),
-      hover: new Howl({ src: ['/sounds/hover.mp3'], volume: 0.2 }),
-      beep: new Howl({ src: ['/sounds/beep.mp3'], volume: 0.15 }),
-      wosh: new Howl({ src: ['/sounds/wosh.mp3'], volume: 0.8 }),
+      space: new Howl({
+        src: ['/sounds/space.mp3'],
+        loop: true,
+        volume: 0.0, // Fade in later
+        html5: false
+      }),
+      hover: new Howl({
+        src: ['/sounds/hover.mp3'],
+        volume: 0.3
+      }),
+      tap: new Howl({
+        src: ['/sounds/tap.mp3'],
+        volume: 0.5
+      }),
+      beep: new Howl({
+        src: ['/sounds/beep.mp3'],
+        volume: 0.2
+      }),
+      wosh: new Howl({
+        src: ['/sounds/wosh.mp3'],
+        volume: 0.8
+      })
     };
   }
 
   init() {
     if (this.enabled) return;
     this.enabled = true;
-    Howler.volume(1.0);
+    Howler.volume(0.8);
   }
 
-  playPowerOn() {
+  playHover() {
     if (!this.enabled) return;
-    this.sounds.wosh.play();
+    this.sounds.hover.play();
   }
 
   playClick() {
@@ -29,44 +47,31 @@ class SoundEngine {
     this.sounds.tap.play();
   }
   
-  playBootLine() {
+  playBeep() {
     if (!this.enabled) return;
     this.sounds.beep.play();
   }
 
-  playScroll() {
+  playPowerOn() {
     if (!this.enabled) return;
-    // Lower volume and pitch down tap for scroll
-    const id = this.sounds.tap.play();
-    this.sounds.tap.volume(0.05, id);
-    this.sounds.tap.rate(0.8, id);
+    this.sounds.wosh.play();
   }
 
   playAmbient() {
     if (!this.enabled) return;
-    if (!this.sounds.space.playing()) {
-      this.sounds.space.play();
-      this.sounds.space.fade(0, 0.4, 2000);
-    }
-  }
-
-  playHover() {
-    if (!this.enabled) return;
-    // Don't restart if currently playing hover rapidly
-    this.sounds.hover.play();
+    const id = this.sounds.space.play();
+    this.sounds.space.fade(0, 0.4, 2000, id);
+    this.ambientId = id;
   }
 
   suspend() {
-    if (this.enabled) {
-      this.sounds.space.pause();
-    }
+    if (!this.enabled) return;
+    Howler.mute(true);
   }
 
   resume() {
-    if (this.enabled && !this.sounds.space.playing()) {
-      this.sounds.space.play();
-      this.sounds.space.fade(0, 0.4, 1000);
-    }
+    if (!this.enabled) return;
+    Howler.mute(false);
   }
 }
 

@@ -96,7 +96,7 @@ nav { opacity: 0; animation: fadeUp 1s .5s forwards; pointer-events: all; }
 
 /* ── PANEL BASE ────────────────────────────────────── */
 .content-panel { position: absolute; opacity: 0; transform: translateY(22px); transition: opacity .65s cubic-bezier(.4,0,.2,1), transform .65s cubic-bezier(.4,0,.2,1); pointer-events: none; }
-.content-panel.active { opacity: 1; transform: translateY(0); pointer-events: auto; }
+.content-panel.active { opacity: 1; transform: translateY(0); pointer-events: all; }
 .panel-label { font-family: var(--mono); font-size: .6rem; letter-spacing: .25em; text-transform: uppercase; color: var(--accent); margin-bottom: 1.4rem; display: flex; align-items: center; gap: .8rem; }
 .panel-label::after { content: ''; flex: 1; height: 1px; background: rgba(0,212,255,.2); }
 .panel-heading { font-size: clamp(1.9rem, 3vw, 2.9rem); font-weight: 800; letter-spacing: -.035em; line-height: 1.05; margin-bottom: 1.3rem; color: var(--text); }
@@ -438,10 +438,7 @@ nav { opacity: 0; animation: fadeUp 1s .5s forwards; pointer-events: all; }
   .bl-ok { font-size: 0.6rem; }
   .boot-box { width: 92vw; }
   .boot-title { font-size: 0.8rem; }
-  .power-text-block { transform: scale(0.85); }
-  .sys-status { left: 1.5rem; bottom: 2rem; font-size: 0.5rem; }
-  .bracket.bl { bottom: 6rem; left: 1.5rem; }
-  .bracket.br { bottom: 6rem; right: 1.5rem; }
-  .bracket.tl { top: 1.5rem; left: 1.5rem; }
-  .bracket.tr { top: 1.5rem; right: 1.5rem; }
+  .power-heading { font-size: 2.2rem; margin-bottom: 0.5rem; }
+  .power-subheading { font-size: 0.55rem; padding: 0 1.5rem; margin-bottom: 2.5rem; line-height: 1.5; }
+  .power-action { padding: 0.7rem 1.4rem; font-size: 0.55rem; }
 }
