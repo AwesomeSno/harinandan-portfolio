@@ -28,8 +28,8 @@ class SoundEngine {
         src: ['/sounds/wosh.mp3'],
         volume: 0.8
       }),
-      pop: new Howl({
-        src: ['/sounds/pop.mp3'],
+      shutter: new Howl({
+        src: ['/sounds/shutter.mp3'],
         volume: 0.4
       })
     };
@@ -56,9 +56,9 @@ class SoundEngine {
     this.sounds.beep.play();
   }
 
-  playPop() {
+  playShutter() {
     if (!this.enabled) return;
-    this.sounds.pop.play();
+    this.sounds.shutter.play();
   }
 
   playPowerOn() {
