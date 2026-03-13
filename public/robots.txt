@@ -1,4 +1,8 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://harinandan.in/sitemap.xml
+# Host
+Host: https://www.harinandan.in
+
+# Sitemaps
+Sitemap: https://www.harinandan.in/sitemap.xml

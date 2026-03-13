@@ -11,9 +11,9 @@ export default function ContactPanel({ active }) {
       </p>
       <span className="contact-org">Co-Founder @ AxeomLabs · Founder @ The Shadow Company</span>
       <div className="contact-links">
-        <a href="mailto:harinandanjv2008@gmail.com" className="contact-link primary"><span>Get in touch</span></a>
-        <a href="https://github.com/AwesomeSno" className="contact-link" target="_blank" rel="noopener noreferrer"><span>GitHub</span></a>
-        <a href="https://linkedin.com/in/harinandanjv" className="contact-link" target="_blank" rel="noopener noreferrer"><span>LinkedIn</span></a>
+        <a href="mailto:harinandanjv2008@gmail.com" className="contact-link primary" aria-label="Email Harinandan J V" rel="me"><span>Get in touch</span></a>
+        <a href="https://github.com/AwesomeSno" className="contact-link" target="_blank" rel="me noopener noreferrer" aria-label="Harinandan J V's GitHub Profile"><span>GitHub</span></a>
+        <a href="https://linkedin.com/in/harinandanjv" className="contact-link" target="_blank" rel="me noopener noreferrer" aria-label="Harinandan J V's LinkedIn Profile"><span>LinkedIn</span></a>
       </div>
     </section>
   )
