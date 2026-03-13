@@ -30,7 +30,7 @@ class SoundEngine {
       }),
       shutter: new Howl({
         src: ['/sounds/shutter.mp3'],
-        volume: 0.4
+        volume: 0.2
       })
     };
   }
