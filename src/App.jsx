@@ -10,6 +10,7 @@ import AboutPanel from './components/AboutPanel'
 import ProjectsPanel from './components/ProjectsPanel'
 import TechPanel from './components/TechPanel'
 import ContactPanel from './components/ContactPanel'
+import { soundEngine } from './utils/sounds'
 
 export const SECTIONS = [
   { cam: { x: 0,   y: 0,  z: 22 }, tgt: { x: 0,  y: 0  }, fog: 0.016, lbl: '01 — Intro' },
@@ -44,7 +45,10 @@ export default function App() {
   // Show hero after boot completes
   useEffect(() => {
     if (!bootDone) return
-    const t = setTimeout(() => setHeroFade({ opacity: 1, ty: 0 }), 400)
+    const t = setTimeout(() => {
+      setHeroFade({ opacity: 1, ty: 0 })
+      soundEngine.playAmbient()
+    }, 400)
     return () => clearTimeout(t)
   }, [bootDone])
 
@@ -58,6 +62,7 @@ export default function App() {
       const sec = Math.round(prog * (SECTIONS.length - 1))
       if (sec !== curSecRef.current) {
         flashTransition()
+        soundEngine.playScroll()
         curSecRef.current = sec
         setCurrentSection(sec)
       }
@@ -72,12 +77,23 @@ export default function App() {
       setBarsVisible(prog > 0.06)
     }
 
+    const handleGlobalClick = () => {
+      soundEngine.init()
+      soundEngine.playClick()
+    }
+
     window.addEventListener('scroll', handleScroll, { passive: true })
+    window.addEventListener('click', handleGlobalClick)
     handleScroll()
-    return () => window.removeEventListener('scroll', handleScroll)
+    return () => {
+      window.removeEventListener('scroll', handleScroll)
+      window.removeEventListener('click', handleGlobalClick)
+    }
   }, [flashTransition])
 
   const handleBootDone = useCallback(() => {
+    soundEngine.init()
+    soundEngine.playBoot()
     setBootDone(true)
   }, [])
 
