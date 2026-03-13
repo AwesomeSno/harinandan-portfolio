@@ -83,7 +83,7 @@ export default function App() {
     }
 
     const handleHover = (e) => {
-      const tgt = e.target.closest('a, button, .tech-cell, .project-item, .power-overlay, .bl-ok')
+      const tgt = e.target.closest('a, button, .tech-cell, .project-item')
       if (!tgt) return
       
       // Prevent trigger when moving between children of the same parent

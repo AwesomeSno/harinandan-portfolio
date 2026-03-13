@@ -49,48 +49,49 @@ class SoundEngine {
     return curve;
   }
 
-  // Cinematic sub-bass drop on power
+  // Deep, smooth cinematic bass impact
   playPowerOn() {
     if (!this.enabled) return;
     const now = this.ctx.currentTime;
     
-    // Deep Sub bass drop
+    // Low sub thud
     const subOsc = this.ctx.createOscillator();
     const subGain = this.ctx.createGain();
     subOsc.type = 'sine';
-    subOsc.frequency.setValueAtTime(150, now);
-    subOsc.frequency.exponentialRampToValueAtTime(10, now + 1.5);
+    subOsc.frequency.setValueAtTime(80, now);
+    subOsc.frequency.exponentialRampToValueAtTime(30, now + 1.2);
     subGain.gain.setValueAtTime(0, now);
-    subGain.gain.linearRampToValueAtTime(1.5, now + 0.1);
-    subGain.gain.exponentialRampToValueAtTime(0.001, now + 1.5);
+    subGain.gain.linearRampToValueAtTime(1.0, now + 0.05);
+    subGain.gain.exponentialRampToValueAtTime(0.001, now + 1.2);
     subOsc.connect(subGain);
     subGain.connect(this.masterGain);
     subOsc.start(now);
-    subOsc.stop(now + 1.5);
+    subOsc.stop(now + 1.2);
 
-    // High tech sweeping beep
+    // Mid atmosphere bloom
     const midOsc = this.ctx.createOscillator();
     const midGain = this.ctx.createGain();
-    midOsc.type = 'sawtooth';
-    midOsc.frequency.setValueAtTime(1200, now + 0.1);
-    midOsc.frequency.exponentialRampToValueAtTime(200, now + 0.5);
+    midOsc.type = 'triangle';
+    midOsc.frequency.setValueAtTime(150, now);
+    midOsc.frequency.exponentialRampToValueAtTime(50, now + 2.0);
     midGain.gain.setValueAtTime(0, now);
-    midGain.gain.linearRampToValueAtTime(0.15, now + 0.15);
-    midGain.gain.exponentialRampToValueAtTime(0.001, now + 0.5);
+    midGain.gain.linearRampToValueAtTime(0.15, now + 0.2);
+    midGain.gain.exponentialRampToValueAtTime(0.001, now + 2.0);
     
+    // Add warm filtering
     const filter = this.ctx.createBiquadFilter();
     filter.type = 'lowpass';
-    filter.frequency.setValueAtTime(100, now);
-    filter.frequency.exponentialRampToValueAtTime(5000, now + 0.2);
+    filter.frequency.setValueAtTime(300, now);
+    filter.frequency.exponentialRampToValueAtTime(1500, now + 1.0);
     
     midOsc.connect(filter);
     filter.connect(midGain);
     midGain.connect(this.masterGain);
-    midOsc.start(now + 0.1);
-    midOsc.stop(now + 0.6);
+    midOsc.start(now);
+    midOsc.stop(now + 2.0);
   }
 
-  // Heavy mechanical clonk for clicking
+  // Smooth, subtle cinematic UI click
   playClick() {
     if (!this.enabled) return;
     const now = this.ctx.currentTime;
@@ -98,17 +99,18 @@ class SoundEngine {
     const osc = this.ctx.createOscillator();
     const gain = this.ctx.createGain();
     
-    osc.type = 'square';
-    osc.frequency.setValueAtTime(300, now);
-    osc.frequency.exponentialRampToValueAtTime(40, now + 0.08);
+    // Use a sine wave for less harshness, quickly pitched down
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(600, now);
+    osc.frequency.exponentialRampToValueAtTime(100, now + 0.04);
     
-    gain.gain.setValueAtTime(0.4, now);
-    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.1);
+    gain.gain.setValueAtTime(0.25, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.04);
     
     osc.connect(gain);
     gain.connect(this.masterGain);
     osc.start(now);
-    osc.stop(now + 0.1);
+    osc.stop(now + 0.04);
   }
 
   // Subtle holographic glass tick for scroll
