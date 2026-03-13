@@ -62,7 +62,6 @@ export default function App() {
       const sec = Math.round(prog * (SECTIONS.length - 1))
       if (sec !== curSecRef.current) {
         flashTransition()
-        soundEngine.playScroll()
         curSecRef.current = sec
         setCurrentSection(sec)
       }
@@ -116,7 +115,6 @@ export default function App() {
 
   const handleBootDone = useCallback(() => {
     soundEngine.init()
-    soundEngine.playBoot()
     setBootDone(true)
   }, [])
 
