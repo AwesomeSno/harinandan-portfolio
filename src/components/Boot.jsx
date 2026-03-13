@@ -48,7 +48,10 @@ export default function Boot({ onComplete }) {
       }
       const i = idx
       setLines(prev => [...prev, BOOT_LINES[i]])
-      timers.push(setTimeout(() => setVisible(prev => new Set([...prev, i])), 16))
+      timers.push(setTimeout(() => {
+        soundEngine.playBootLine()
+        setVisible(prev => new Set([...prev, i]))
+      }, 16))
       idx++
       timers.push(setTimeout(addLine, idx < 6 ? 160 : 100))
     }
@@ -61,13 +64,28 @@ export default function Boot({ onComplete }) {
     <div id="boot" className={out ? 'out' : ''} style={bgWhite ? { background: '#fff' } : {}}>
       {!powerOn && (
         <div className="power-overlay" onClick={handlePowerOn}>
-          <div className="power-content">
-            <h1 className="power-heading">Harinandan J V</h1>
-            <p className="power-subheading">Systems Developer &bull; OS Architecture &bull; Computing</p>
-            <div className="power-action">
-              <span className="pulse-dot"></span>
-              TAP TO ENTER 
+          <div className="cyber-grid" />
+          
+          <div className="bracket tl" />
+          <div className="bracket tr" />
+          <div className="bracket bl" />
+          <div className="bracket br" />
+
+          <div className="power-center">
+            <div className="radar-circle"></div>
+            <div className="power-icon-wrapper">
+              <div className="power-icon">TAP</div>
             </div>
+          </div>
+          
+          <div className="power-text-block">
+            <div className="pt-title">AWAITING AUTHORIZATION</div>
+            <div className="pt-sub">SYSTEM OFFLINE // SECURE CHANNEL</div>
+          </div>
+          
+          <div className="sys-status">
+            USR: UNCLASSIFIED<br />
+            LOC: ANONYMOUS
           </div>
         </div>
       )}
