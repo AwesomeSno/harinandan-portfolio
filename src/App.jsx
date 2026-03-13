@@ -82,12 +82,35 @@ export default function App() {
       soundEngine.playClick()
     }
 
+    const handleHover = (e) => {
+      const tgt = e.target.closest('a, button, .tech-cell, .project-item, .power-overlay, .bl-ok')
+      if (!tgt) return
+      
+      // Prevent trigger when moving between children of the same parent
+      if (e.relatedTarget && tgt.contains(e.relatedTarget)) return
+      
+      soundEngine.playHover()
+    }
+
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        soundEngine.suspend()
+      } else {
+        soundEngine.resume()
+      }
+    }
+
     window.addEventListener('scroll', handleScroll, { passive: true })
     window.addEventListener('click', handleGlobalClick)
+    document.addEventListener('mouseover', handleHover)
+    document.addEventListener('visibilitychange', handleVisibilityChange)
+    
     handleScroll()
     return () => {
       window.removeEventListener('scroll', handleScroll)
       window.removeEventListener('click', handleGlobalClick)
+      document.removeEventListener('mouseover', handleHover)
+      document.removeEventListener('visibilitychange', handleVisibilityChange)
     }
   }, [flashTransition])
 
