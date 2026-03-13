@@ -5,7 +5,7 @@ if (now < new Date(now.getFullYear(), 3, 14)) age--
 
 export default function AboutPanel({ active }) {
   return (
-    <div id="about-panel" className={`content-panel glass-card${active ? ' active' : ''}`}>
+    <section id="about-panel" className={`content-panel glass-card${active ? ' active' : ''}`}>
       <div className="panel-label">02 — Identity</div>
       <div className="age-badge">Age&nbsp;<strong>{age}</strong>&nbsp;· Thiruvananthapuram</div>
       <h2 className="panel-heading">Building the<br />impossible,<br />one system<br />at a time.</h2>
@@ -34,6 +34,6 @@ export default function AboutPanel({ active }) {
         <span className="chip">FOSS Fest 2023</span>
         <span className="chip">KITE Competition</span>
       </div>
-    </div>
+    </section>
   )
 }

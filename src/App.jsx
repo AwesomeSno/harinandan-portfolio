@@ -96,7 +96,7 @@ export default function App() {
       <Background sections={SECTIONS} scrollProgRef={scrollProgRef} bootDone={bootDone} />
 
       <div id="scroll-container">
-        <div id="sticky-view">
+        <main id="sticky-view">
           <div id="ui">
             <Header />
             <SectionLabel label={SECTIONS[currentSection].lbl} />
@@ -108,7 +108,7 @@ export default function App() {
             <ScrollHint visible={bootDone && currentSection === 0 && heroFade.opacity > 0.05} />
             <Progress currentSection={currentSection} total={SECTIONS.length} />
           </div>
-        </div>
+        </main>
       </div>
     </>
   )

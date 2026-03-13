@@ -12,7 +12,7 @@ const TECH = [
 
 export default function TechPanel({ active }) {
   return (
-    <div id="tech-panel" className={`content-panel glass-card${active ? ' active' : ''}`}>
+    <section id="tech-panel" className={`content-panel glass-card${active ? ' active' : ''}`}>
       <div className="panel-label">04 — Stack</div>
       <h2 className="panel-heading">Tools &amp;<br />systems.</h2>
       <div className="tech-grid">
@@ -24,6 +24,6 @@ export default function TechPanel({ active }) {
           </div>
         ))}
       </div>
-    </div>
+    </section>
   )
 }

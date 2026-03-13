@@ -9,7 +9,7 @@ const PROJECTS = [
 
 export default function ProjectsPanel({ active }) {
   return (
-    <div id="projects-panel" className={`content-panel glass-card${active ? ' active' : ''}`}>
+    <section id="projects-panel" className={`content-panel glass-card${active ? ' active' : ''}`}>
       <div className="panel-label">03 — Work</div>
       <h2 className="panel-heading">Selected<br />projects.</h2>
       <ul className="project-list">
@@ -24,6 +24,6 @@ export default function ProjectsPanel({ active }) {
           </li>
         ))}
       </ul>
-    </div>
+    </section>
   )
 }

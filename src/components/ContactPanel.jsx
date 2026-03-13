@@ -1,6 +1,6 @@
 export default function ContactPanel({ active }) {
   return (
-    <div id="contact-panel" className={`content-panel glass-card${active ? ' active' : ''}`}>
+    <section id="contact-panel" className={`content-panel glass-card${active ? ' active' : ''}`}>
       <div className="panel-label" style={{ justifyContent: 'center', marginBottom: '1.5rem' }}>
         05 — Contact
       </div>
@@ -15,6 +15,6 @@ export default function ContactPanel({ active }) {
         <a href="#" className="contact-link"><span>GitHub</span></a>
         <a href="#" className="contact-link"><span>LinkedIn</span></a>
       </div>
-    </div>
+    </section>
   )
 }
