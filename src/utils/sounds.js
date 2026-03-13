@@ -19,6 +19,28 @@ class SoundEngine {
     this.enabled = true;
   }
 
+  // A rising tech startup sound
+  playPowerOn() {
+    if (!this.enabled) return;
+    const now = this.ctx.currentTime;
+    const osc = this.ctx.createOscillator();
+    const gain = this.ctx.createGain();
+    
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(100, now);
+    osc.frequency.exponentialRampToValueAtTime(1200, now + 0.8);
+    
+    gain.gain.setValueAtTime(0, now);
+    gain.gain.linearRampToValueAtTime(0.3, now + 0.1);
+    gain.gain.linearRampToValueAtTime(0, now + 0.8);
+    
+    osc.connect(gain);
+    gain.connect(this.masterGain);
+    
+    osc.start();
+    osc.stop(now + 0.8);
+  }
+
   // A sharp, high-tech UI click
   playClick() {
     if (!this.enabled) return;

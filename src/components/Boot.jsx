@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { soundEngine } from '../utils/sounds'
 
 const BOOT_LINES = [
   ['NEURAL CORE ONLINE',              'OK'],
@@ -12,6 +13,7 @@ const BOOT_LINES = [
 ]
 
 export default function Boot({ onComplete }) {
+  const [powerOn, setPowerOn]     = useState(false)
   const [lines, setLines]         = useState([])
   const [visibleSet, setVisible]  = useState(new Set())
   const [sep2, setSep2]           = useState(false)
@@ -19,7 +21,15 @@ export default function Boot({ onComplete }) {
   const [bgWhite, setBgWhite]     = useState(false)
   const [out, setOut]             = useState(false)
 
+  const handlePowerOn = () => {
+    soundEngine.init()
+    soundEngine.playPowerOn()
+    setPowerOn(true)
+  }
+
   useEffect(() => {
+    if (!powerOn) return
+
     const timers = []
     let idx = 0
 
@@ -45,11 +55,19 @@ export default function Boot({ onComplete }) {
 
     timers.push(setTimeout(addLine, 350))
     return () => timers.forEach(clearTimeout)
-  }, [onComplete])
+  }, [powerOn, onComplete])
 
   return (
     <div id="boot" className={out ? 'out' : ''} style={bgWhite ? { background: '#fff' } : {}}>
-      <div className="boot-box">
+      {!powerOn && (
+        <div className="power-overlay" onClick={handlePowerOn}>
+          <div className="power-button">
+            <div className="power-icon">⏻</div>
+            <div className="power-text">INITIALIZE SYSTEM</div>
+          </div>
+        </div>
+      )}
+      <div className="boot-box" style={{ opacity: powerOn ? 1 : 0 }}>
         <div className="boot-title">HARINANDAN.SYS - SYSTEMS DEVELOPER v1.0</div>
         <div className="boot-sep" />
         <div>

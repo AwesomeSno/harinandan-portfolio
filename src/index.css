@@ -188,6 +188,59 @@ nav { opacity: 0; animation: fadeUp 1s .5s forwards; pointer-events: all; }
 @keyframes scrollPulse { 0%, 100% { opacity: .3; } 50% { opacity: 1; } }
 @keyframes blink     { 50% { opacity: 0; } }
 
+/* Power Overlay */
+.power-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: #02060c;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  background-image: radial-gradient(circle at center, rgba(0, 212, 255, 0.05) 0%, transparent 70%);
+}
+
+.power-button {
+  text-align: center;
+  color: #00d4ff;
+  font-family: var(--mono);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.2rem;
+  transition: transform 0.3s ease;
+}
+
+.power-button:hover {
+  transform: scale(1.05);
+}
+
+.power-icon {
+  font-size: 2.5rem;
+  width: 90px;
+  height: 90px;
+  border: 1px solid rgba(0, 212, 255, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  box-shadow: 0 0 20px rgba(0, 212, 255, 0.1), inset 0 0 20px rgba(0, 212, 255, 0.1);
+  animation: power-pulse 2s infinite ease-in-out;
+}
+
+.power-text {
+  font-size: 0.7rem;
+  letter-spacing: 0.3em;
+  font-weight: 300;
+  opacity: 0.8;
+}
+
+@keyframes power-pulse {
+  0%, 100% { box-shadow: 0 0 20px rgba(0, 212, 255, 0.1), inset 0 0 20px rgba(0, 212, 255, 0.1); border-color: rgba(0, 212, 255, 0.3); }
+  50% { box-shadow: 0 0 40px rgba(0, 212, 255, 0.3), inset 0 0 30px rgba(0, 212, 255, 0.2); border-color: rgba(0, 212, 255, 0.6); }
+}
+
 /* ── MOBILE RESPONSIVENESS ────────────────────────── */
 @media (max-width: 768px) {
   #header {
