@@ -30,10 +30,43 @@ export default function Dashboard({ session }) {
         .limit(10)
       
       const config = (data && data.length > 0) ? data[0].config : {
-        hero: { eyebrow: "Systems Developer", name1: "Hari", name2: "nandan", role: "", badge: "" },
-        about: { dob: "2008-04-14", location: "", heading: "", body: "", stats: [], chips: [] },
-        tech: [],
-        sections: []
+        hero: {
+          eyebrow: "Systems Developer",
+          name1: "Hari",
+          name2: "nandan",
+          role: "Building at the edge of AI,\nOS architecture & hardware.",
+          badge: "Co-Founder · AxeomLabs"
+        },
+        about: {
+          dob: "2008-04-14",
+          location: "Thiruvananthapuram",
+          heading: "Building the\nimpossible,\none system\nat a time.",
+          body: "Systems developer from Kerala, India. I build across\nOS architecture, AI infrastructure, cybersecurity,\nrobotics, and computer vision.",
+          stats: [
+            { num: "6", plus: true, desc: "Major projects" },
+            { num: "4", plus: true, desc: "Tech domains" },
+            { num: "2", plus: false, desc: "Companies" }
+          ],
+          chips: ["Kerala Police · AI Intern", "AITEDUCONF 2024", "FOSS Fest 2023", "KITE Competition"]
+        },
+        tech: [
+          { name: "Python", level: "Expert", icon: "Code2" },
+          { name: "C / C++", level: "Advanced", icon: "Cpu" },
+          { name: "JavaScript", level: "Advanced", icon: "Globe" },
+          { name: "OpenCV", level: "Advanced", icon: "Eye" },
+          { name: "Encryption", level: "Advanced", icon: "Lock" },
+          { name: "Linux", level: "Expert", icon: "Terminal" },
+          { name: "Arduino", level: "Advanced", icon: "Bot" },
+          { name: "AI / ML", level: "Advanced", icon: "Brain" },
+          { name: "Embedded", level: "Advanced", icon: "CircuitBoard" }
+        ],
+        sections: [
+          { type: "Hero", lbl: "01 — Intro", cam: { x: 0, y: 0, z: 22 }, tgt: { x: 0, y: 0 }, fog: 0.016 },
+          { type: "About", lbl: "02 — Identity", cam: { x: 13, y: 2, z: 15 }, tgt: { x: 0, y: 0 }, fog: 0.022 },
+          { type: "Work", lbl: "03 — Work", cam: { x: -11, y: -3, z: 17 }, tgt: { x: -2, y: -1 }, fog: 0.02 },
+          { type: "Stack", lbl: "04 — Stack", cam: { x: 5, y: 9, z: 15 }, tgt: { x: 0, y: 2 }, fog: 0.024 },
+          { type: "Contact", lbl: "05 — Contact", cam: { x: 0, y: 0, z: 25 }, tgt: { x: 0, y: 0 }, fog: 0.013 }
+        ]
       }
       
       setSiteConfig(config)
@@ -82,6 +115,52 @@ export default function Dashboard({ session }) {
       setMessage('Error reverting: ' + err.message)
     }
     setLoading(false)
+  }
+
+  const handleResetConfig = () => {
+    if (!window.confirm("This will wipe your current GUI settings and restore the original cinematic defaults. Are you sure?")) return;
+    const def = {
+      hero: {
+        eyebrow: "Systems Developer",
+        name1: "Hari",
+        name2: "nandan",
+        role: "Building at the edge of AI,\nOS architecture & hardware.",
+        badge: "Co-Founder · AxeomLabs"
+      },
+      about: {
+        dob: "2008-04-14",
+        location: "Thiruvananthapuram",
+        heading: "Building the\nimpossible,\none system\nat a time.",
+        body: "Systems developer from Kerala, India. I build across\nOS architecture, AI infrastructure, cybersecurity,\nrobotics, and computer vision.",
+        stats: [
+          { num: "6", plus: true, desc: "Major projects" },
+          { num: "4", plus: true, desc: "Tech domains" },
+          { num: "2", plus: false, desc: "Companies" }
+        ],
+        chips: ["Kerala Police · AI Intern", "AITEDUCONF 2024", "FOSS Fest 2023", "KITE Competition"]
+      },
+      tech: [
+        { name: "Python", level: "Expert", icon: "Code2" },
+        { name: "C / C++", level: "Advanced", icon: "Cpu" },
+        { name: "JavaScript", level: "Advanced", icon: "Globe" },
+        { name: "OpenCV", level: "Advanced", icon: "Eye" },
+        { name: "Encryption", level: "Advanced", icon: "Lock" },
+        { name: "Linux", level: "Expert", icon: "Terminal" },
+        { name: "Arduino", level: "Advanced", icon: "Bot" },
+        { name: "AI / ML", level: "Advanced", icon: "Brain" },
+        { name: "Embedded", level: "Advanced", icon: "CircuitBoard" }
+      ],
+      sections: [
+        { type: "Hero", lbl: "01 — Intro", cam: { x: 0, y: 0, z: 22 }, tgt: { x: 0, y: 0 }, fog: 0.016 },
+        { type: "About", lbl: "02 — Identity", cam: { x: 13, y: 2, z: 15 }, tgt: { x: 0, y: 0 }, fog: 0.022 },
+        { type: "Work", lbl: "03 — Work", cam: { x: -11, y: -3, z: 17 }, tgt: { x: -2, y: -1 }, fog: 0.02 },
+        { type: "Stack", lbl: "04 — Stack", cam: { x: 5, y: 9, z: 15 }, tgt: { x: 0, y: 2 }, fog: 0.024 },
+        { type: "Contact", lbl: "05 — Contact", cam: { x: 0, y: 0, z: 25 }, tgt: { x: 0, y: 0 }, fog: 0.013 }
+      ]
+    }
+    setSiteConfig(def)
+    setConfigText(JSON.stringify(def, null, 2))
+    setMessage('Dashboard reset to factory values. Click PUBLISH to apply to live site.')
   }
 
   const handleAddDynamicSection = () => {
@@ -306,9 +385,14 @@ export default function Dashboard({ session }) {
             )}
           </div>
 
-          <button onClick={handleSaveConfig} disabled={loading} className="admin-btn active-btn" style={{ marginTop: '2rem', width: '100%', padding: '1.2rem' }}>
-            {loading ? 'UPLOADING ARCHITECTURE...' : 'PUBLISH ALL CHANGES TO LIVE SITE'}
-          </button>
+          <div className="admin-actions" style={{ marginTop: '2rem', display: 'flex', gap: '1rem' }}>
+            <button onClick={handleSaveConfig} disabled={loading} className="admin-btn active-btn" style={{ flex: 1, padding: '1.2rem' }}>
+              {loading ? 'UPLOADING ARCHITECTURE...' : 'PUBLISH ALL CHANGES TO LIVE SITE'}
+            </button>
+            <button onClick={handleResetConfig} className="admin-btn logout-btn" style={{ padding: '0 1.5rem' }}>
+              EMERGENCY RESET
+            </button>
+          </div>
         </section>
 
         <section className="admin-section">
