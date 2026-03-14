@@ -7,4 +7,8 @@ if (!supabaseUrl || !supabaseAnonKey) {
   console.warn('Supabase URL and Anon Key are missing from environment variables.')
 }
 
-export const supabase = createClient(supabaseUrl || '', supabaseAnonKey || '')
+// Use placeholders so the app doesn't fatally crash if env variables are forgotten in deploy
+const safeUrl = supabaseUrl || 'https://placeholder.supabase.co'
+const safeKey = supabaseAnonKey || 'placeholder'
+
+export const supabase = createClient(safeUrl, safeKey)
