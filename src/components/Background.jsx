@@ -210,25 +210,45 @@ export default function Background({ sections, scrollProgRef, bootDone }) {
 
       lp += (sp - lp) * .055
       const si = lp * (sections.length - 1)
-      const s0 = sections[Math.floor(si)]
-      const s1 = sections[Math.min(Math.ceil(si), sections.length - 1)]
-      const f  = si - Math.floor(si)
+      const idx0 = Math.floor(si)
+      const idx1 = Math.min(Math.ceil(si), sections.length - 1)
+      
+      const s0 = sections[idx0] || sections[0] || {}
+      const s1 = sections[idx1] || sections[0] || {}
+      const f  = si - idx0
 
       const mnx = ((mx / window.innerWidth)  - .5) * 2
       const mny = ((my / window.innerHeight) - .5) * -2
 
-      camP.x += (L(s0.cam.x, s1.cam.x, f) + mnx * 1.4 - camP.x) * .04
-      camP.y += (L(s0.cam.y, s1.cam.y, f) + mny * .9  - camP.y) * .04
-      camP.z += (L(s0.cam.z, s1.cam.z, f) - camP.z)             * .04
-      camT.x += (L(s0.tgt.x, s1.tgt.x, f) - camT.x)            * .04
-      camT.y += (L(s0.tgt.y, s1.tgt.y, f) - camT.y)            * .04
+      const getSafe = (obj, path, def) => {
+        const parts = path.split('.')
+        let curr = obj
+        for (const p of parts) {
+          if (curr == null || curr[p] == null) return def
+          curr = curr[p]
+        }
+        return curr
+      }
+
+      const c0 = { x: getSafe(s0, 'cam.x', 0), y: getSafe(s0, 'cam.y', 0), z: getSafe(s0, 'cam.z', 22) }
+      const c1 = { x: getSafe(s1, 'cam.x', 0), y: getSafe(s1, 'cam.y', 0), z: getSafe(s1, 'cam.z', 22) }
+      const t0 = { x: getSafe(s0, 'tgt.x', 0), y: getSafe(s0, 'tgt.y', 0) }
+      const t1 = { x: getSafe(s1, 'tgt.x', 0), y: getSafe(s1, 'tgt.y', 0) }
+      const f0 = getSafe(s0, 'fog', 0.016)
+      const f1 = getSafe(s1, 'fog', 0.016)
+
+      camP.x += (L(c0.x, c1.x, f) + mnx * 1.4 - camP.x) * .04
+      camP.y += (L(c0.y, c1.y, f) + mny * .9  - camP.y) * .04
+      camP.z += (L(c0.z, c1.z, f) - camP.z)             * .04
+      camT.x += (L(t0.x, t1.x, f) - camT.x)            * .04
+      camT.y += (L(t0.y, t1.y, f) - camT.y)            * .04
       camera.position.copy(camP)
       camera.lookAt(camT)
 
       // Update atmosphere view vector
       atmosphereMat.uniforms.viewVector.value = camera.position
 
-      scene.fog.density += (L(s0.fog, s1.fog, f) - scene.fog.density) * .05
+      scene.fog.density += (L(f0, f1, f) - scene.fog.density) * .05
 
       // Globe rotation
       earth.rotation.y += 0.001

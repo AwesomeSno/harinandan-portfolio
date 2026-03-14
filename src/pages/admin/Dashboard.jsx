@@ -301,16 +301,16 @@ export default function Dashboard({ session }) {
             {siteConfig && activeTab === 'hero' && (
               <div className="admin-form">
                 <div className="form-row">
-                  <div className="form-group"><label>Eyebrow</label><input className="admin-input" value={siteConfig.hero.eyebrow} onChange={e => updateConfigField('hero.eyebrow', e.target.value)} /></div>
-                  <div className="form-group"><label>Badge</label><input className="admin-input" value={siteConfig.hero.badge} onChange={e => updateConfigField('hero.badge', e.target.value)} /></div>
+                  <div className="form-group"><label>Eyebrow</label><input className="admin-input" value={siteConfig.hero?.eyebrow || ''} onChange={e => updateConfigField('hero.eyebrow', e.target.value)} /></div>
+                  <div className="form-group"><label>Badge</label><input className="admin-input" value={siteConfig.hero?.badge || ''} onChange={e => updateConfigField('hero.badge', e.target.value)} /></div>
                 </div>
                 <div className="form-row">
-                  <div className="form-group"><label>Name Line 1</label><input className="admin-input" value={siteConfig.hero.name1} onChange={e => updateConfigField('hero.name1', e.target.value)} /></div>
-                  <div className="form-group"><label>Name Line 2</label><input className="admin-input" value={siteConfig.hero.name2} onChange={e => updateConfigField('hero.name2', e.target.value)} /></div>
+                  <div className="form-group"><label>Name Line 1</label><input className="admin-input" value={siteConfig.hero?.name1 || ''} onChange={e => updateConfigField('hero.name1', e.target.value)} /></div>
+                  <div className="form-group"><label>Name Line 2</label><input className="admin-input" value={siteConfig.hero?.name2 || ''} onChange={e => updateConfigField('hero.name2', e.target.value)} /></div>
                 </div>
                 <div className="form-group">
                   <label>Role Description</label>
-                  <textarea className="admin-input textarea" value={siteConfig.hero.role} onChange={e => updateConfigField('hero.role', e.target.value)} />
+                  <textarea className="admin-input textarea" value={siteConfig.hero?.role || ''} onChange={e => updateConfigField('hero.role', e.target.value)} />
                 </div>
               </div>
             )}
@@ -318,26 +318,26 @@ export default function Dashboard({ session }) {
             {siteConfig && activeTab === 'about' && (
               <div className="admin-form">
                 <div className="form-row">
-                  <div className="form-group"><label>Date of Birth</label><input type="date" className="admin-input" value={siteConfig.about.dob} onChange={e => updateConfigField('about.dob', e.target.value)} /></div>
-                  <div className="form-group"><label>Location</label><input className="admin-input" value={siteConfig.about.location} onChange={e => updateConfigField('about.location', e.target.value)} /></div>
+                  <div className="form-group"><label>Date of Birth</label><input type="date" className="admin-input" value={siteConfig.about?.dob || ''} onChange={e => updateConfigField('about.dob', e.target.value)} /></div>
+                  <div className="form-group"><label>Location</label><input className="admin-input" value={siteConfig.about?.location || ''} onChange={e => updateConfigField('about.location', e.target.value)} /></div>
                 </div>
-                <div className="form-group"><label>Heading</label><textarea className="admin-input textarea" value={siteConfig.about.heading} onChange={e => updateConfigField('about.heading', e.target.value)} /></div>
-                <div className="form-group"><label>Body Text</label><textarea className="admin-input textarea" value={siteConfig.about.body} onChange={e => updateConfigField('about.body', e.target.value)} /></div>
+                <div className="form-group"><label>Heading</label><textarea className="admin-input textarea" value={siteConfig.about?.heading || ''} onChange={e => updateConfigField('about.heading', e.target.value)} /></div>
+                <div className="form-group"><label>Body Text</label><textarea className="admin-input textarea" value={siteConfig.about?.body || ''} onChange={e => updateConfigField('about.body', e.target.value)} /></div>
               </div>
             )}
 
             {siteConfig && activeTab === 'tech' && (
               <div className="admin-list">
-                {siteConfig.tech.map((t, idx) => (
+                {(siteConfig.tech || []).map((t, idx) => (
                   <div key={idx} className="admin-item" style={{ marginBottom: '1rem', background: 'rgba(255,255,255,0.03)' }}>
                     <div className="item-info" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1rem', width: '100%', marginBottom: '0.5rem' }}>
-                      <input className="admin-input" placeholder="Name" value={t.name} onChange={e => {
+                      <input className="admin-input" placeholder="Name" value={t.name || ''} onChange={e => {
                         const newTech = [...siteConfig.tech]; newTech[idx].name = e.target.value; updateConfigField('tech', newTech)
                       }} />
-                      <input className="admin-input" placeholder="Level" value={t.level} onChange={e => {
+                      <input className="admin-input" placeholder="Level" value={t.level || ''} onChange={e => {
                         const newTech = [...siteConfig.tech]; newTech[idx].level = e.target.value; updateConfigField('tech', newTech)
                       }} />
-                      <input className="admin-input" placeholder="Icon ID" value={t.icon} onChange={e => {
+                      <input className="admin-input" placeholder="Icon ID" value={t.icon || ''} onChange={e => {
                         const newTech = [...siteConfig.tech]; newTech[idx].icon = e.target.value; updateConfigField('tech', newTech)
                       }} />
                     </div>
@@ -347,7 +347,7 @@ export default function Dashboard({ session }) {
                   </div>
                 ))}
                 <button className="admin-btn active-btn" onClick={() => {
-                  const newTech = [...siteConfig.tech, { name: "New Tool", level: "Beginner", icon: "Code2" }];
+                  const newTech = [...(siteConfig.tech || []), { name: "New Tool", level: "Beginner", icon: "Code2" }];
                   updateConfigField('tech', newTech)
                 }}>+ ADD TECH</button>
               </div>
@@ -355,10 +355,10 @@ export default function Dashboard({ session }) {
 
             {siteConfig && activeTab === 'sections' && (
               <div className="admin-list">
-                {siteConfig.sections.map((s, idx) => (
+                {(siteConfig.sections || []).map((s, idx) => (
                   <div key={idx} className="admin-item" style={{ marginBottom: '1rem' }}>
                     <div className="item-info">
-                      <input className="admin-input" style={{ width: '200px' }} value={s.lbl} onChange={e => {
+                      <input className="admin-input" style={{ width: '200px' }} value={s.lbl || ''} onChange={e => {
                         const newSec = [...siteConfig.sections]; newSec[idx].lbl = e.target.value; updateConfigField('sections', newSec)
                       }} />
                       <span className="admin-item-meta">{s.type} Section</span>

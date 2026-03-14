@@ -65,7 +65,10 @@ function MainApp() {
       scrollProgRef.current = prog
       setScrollProg(prog)
 
-      const sec = Math.round(prog * (SECTIONS.length - 1))
+      let sec = Math.round(prog * (SECTIONS.length - 1))
+      if (isNaN(sec)) sec = 0
+      sec = Math.max(0, Math.min(sec, SECTIONS.length - 1))
+
       if (sec !== curSecRef.current) {
         flashTransition()
         soundEngine.playShutter()
