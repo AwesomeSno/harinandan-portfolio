@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
+import { ConfigProvider, useConfig } from './utils/ConfigContext'
 import Boot from './components/Boot'
 import Background from './components/Background'
 import Header from './components/Header'
@@ -12,15 +13,9 @@ import TechPanel from './components/TechPanel'
 import ContactPanel from './components/ContactPanel'
 import { soundEngine } from './utils/sounds'
 
-export const SECTIONS = [
-  { cam: { x: 0,   y: 0,  z: 22 }, tgt: { x: 0,  y: 0  }, fog: 0.016, lbl: '01 — Intro' },
-  { cam: { x: 13,  y: 2,  z: 15 }, tgt: { x: 0,  y: 0  }, fog: 0.022, lbl: '02 — Identity' },
-  { cam: { x: -11, y: -3, z: 17 }, tgt: { x: -2, y: -1 }, fog: 0.02,  lbl: '03 — Work' },
-  { cam: { x: 5,   y: 9,  z: 15 }, tgt: { x: 0,  y: 2  }, fog: 0.024, lbl: '04 — Stack' },
-  { cam: { x: 0,   y: 0,  z: 25 }, tgt: { x: 0,  y: 0  }, fog: 0.013, lbl: '05 — Contact' },
-]
-
-export default function App() {
+function MainApp() {
+  const { config, loading: configLoading } = useConfig()
+  const SECTIONS = config.sections || []
   const [bootDone, setBootDone]           = useState(false)
   const [currentSection, setCurrentSection] = useState(0)
   const [heroFade, setHeroFade]           = useState({ opacity: 0, ty: 30 })
@@ -53,6 +48,8 @@ export default function App() {
   }, [bootDone])
 
   useEffect(() => {
+    if (SECTIONS.length === 0) return
+
     const handleScroll = () => {
       const max  = document.documentElement.scrollHeight - window.innerHeight
       const prog = Math.min(1, window.scrollY / max)
@@ -112,12 +109,16 @@ export default function App() {
       document.removeEventListener('mouseover', handleHover)
       document.removeEventListener('visibilitychange', handleVisibilityChange)
     }
-  }, [flashTransition])
+  }, [flashTransition, SECTIONS])
 
   const handleBootDone = useCallback(() => {
     soundEngine.init()
     setBootDone(true)
   }, [])
+
+  if (configLoading) {
+    return <div style={{ height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#010408', color: '#00d4ff', fontFamily: 'monospace', letterSpacing: '0.2em' }}>ESTABLISHING SYSTEM LINK...</div>
+  }
 
   return (
     <>
@@ -137,17 +138,44 @@ export default function App() {
         <main id="sticky-view">
           <div id="ui">
             <Header />
-            <SectionLabel label={SECTIONS[currentSection].lbl} />
-            <Hero heroFade={heroFade} />
-            <AboutPanel active={currentSection === 1} />
-            <ProjectsPanel active={currentSection === 2} />
-            <TechPanel active={currentSection === 3} />
-            <ContactPanel active={currentSection === 4} />
+            {SECTIONS.length > 0 && (
+              <SectionLabel label={SECTIONS[currentSection]?.lbl} />
+            )}
+            
+            <div id="panels">
+              {SECTIONS.map((s, i) => {
+                const active = currentSection === i
+                if (s.type === 'Hero') return <Hero key={i} heroFade={heroFade} />
+                if (s.type === 'About') return <AboutPanel key={i} active={active} />
+                if (s.type === 'Work') return <ProjectsPanel key={i} active={active} />
+                if (s.type === 'Stack') return <TechPanel key={i} active={active} />
+                if (s.type === 'Contact') return <ContactPanel key={i} active={active} />
+                return (
+                  <div key={i} className={`content-panel glass-card${active ? ' active' : ''}`} style={{padding: '2rem'}}>
+                    <div className="panel-label">{s.lbl}</div>
+                    <h2 className="panel-heading">New Terminal</h2>
+                    <p className="panel-body">This is a dynamic section from the dashboard registry.</p>
+                  </div>
+                )
+              })}
+            </div>
+
             <ScrollHint visible={bootDone && currentSection === 0 && heroFade.opacity > 0.05} />
             <Progress currentSection={currentSection} total={SECTIONS.length} />
           </div>
         </main>
+        
+        {/* Scroll Spacer */}
+        <div style={{ height: `${SECTIONS.length * 100}vh` }} />
       </div>
     </>
+  )
+}
+
+export default function App() {
+  return (
+    <ConfigProvider>
+      <MainApp />
+    </ConfigProvider>
   )
 }
