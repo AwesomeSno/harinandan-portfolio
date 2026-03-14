@@ -12,6 +12,7 @@ export default function Dashboard({ session }) {
 
   // Site Config States
   const [siteConfig, setSiteConfig] = useState(null)
+  const [activeTab, setActiveTab] = useState('hero') // 'hero', 'about', 'tech', 'sections', 'json'
   const [historyList, setHistoryList] = useState([])
   const [configText, setConfigText] = useState('')
 
@@ -28,69 +29,43 @@ export default function Dashboard({ session }) {
         .order('created_at', { ascending: false })
         .limit(10)
       
-      if (!error && data && data.length > 0) {
-        setSiteConfig(data[0].config)
-        setConfigText(JSON.stringify(data[0].config, null, 2))
-        setHistoryList(data)
-      } else {
-        // Default boilerplate if none exists
-        const def = {
-          hero: {
-            eyebrow: "Systems Developer",
-            name1: "Hari",
-            name2: "nandan",
-            role: "Building at the edge of AI,\nOS architecture & hardware.",
-            badge: "Co-Founder · AxeomLabs"
-          },
-          about: {
-            dob: "2008-04-14",
-            location: "Thiruvananthapuram",
-            heading: "Building the\nimpossible,\none system\nat a time.",
-            body: "Systems developer from Kerala, India. I build across\nOS architecture, AI infrastructure, cybersecurity,\nrobotics, and computer vision.",
-            stats: [
-              { num: "6", plus: true, desc: "Major projects" },
-              { num: "4", plus: true, desc: "Tech domains" },
-              { num: "2", plus: false, desc: "Companies" }
-            ],
-            chips: ["Kerala Police · AI Intern", "AITEDUCONF 2024", "FOSS Fest 2023", "KITE Competition"]
-          },
-          tech: [
-            { name: "Python", level: "Expert", icon: "Code2" },
-            { name: "C / C++", level: "Advanced", icon: "Cpu" },
-            { name: "JavaScript", level: "Advanced", icon: "Globe" },
-            { name: "OpenCV", level: "Advanced", icon: "Eye" },
-            { name: "Encryption", level: "Advanced", icon: "Lock" },
-            { name: "Linux", level: "Expert", icon: "Terminal" },
-            { name: "Arduino", level: "Advanced", icon: "Bot" },
-            { name: "AI / ML", level: "Advanced", icon: "Brain" },
-            { name: "Embedded", level: "Advanced", icon: "CircuitBoard" }
-          ],
-          sections: [
-            { type: "Hero", lbl: "01 — Intro", cam: { x: 0, y: 0, z: 22 }, tgt: { x: 0, y: 0 }, fog: 0.016 },
-            { type: "About", lbl: "02 — Identity", cam: { x: 13, y: 2, z: 15 }, tgt: { x: 0, y: 0 }, fog: 0.022 },
-            { type: "Work", lbl: "03 — Work", cam: { x: -11, y: -3, z: 17 }, tgt: { x: -2, y: -1 }, fog: 0.02 },
-            { type: "Stack", lbl: "04 — Stack", cam: { x: 5, y: 9, z: 15 }, tgt: { x: 0, y: 2 }, fog: 0.024 },
-            { type: "Contact", lbl: "05 — Contact", cam: { x: 0, y: 0, z: 25 }, tgt: { x: 0, y: 0 }, fog: 0.013 }
-          ]
-        }
-        setSiteConfig(def)
-        setConfigText(JSON.stringify(def, null, 2))
+      const config = (data && data.length > 0) ? data[0].config : {
+        hero: { eyebrow: "Systems Developer", name1: "Hari", name2: "nandan", role: "", badge: "" },
+        about: { dob: "2008-04-14", location: "", heading: "", body: "", stats: [], chips: [] },
+        tech: [],
+        sections: []
       }
+      
+      setSiteConfig(config)
+      setConfigText(JSON.stringify(config, null, 2))
+      if (data) setHistoryList(data)
     } catch(err) {
       console.log('Ensure site_config table exists.', err)
     }
   }
 
+  const updateConfigField = (path, value) => {
+    const newConfig = { ...siteConfig }
+    const keys = path.split('.')
+    let current = newConfig
+    for (let i = 0; i < keys.length - 1; i++) {
+       current = current[keys[i]]
+    }
+    current[keys[keys.length - 1]] = value
+    setSiteConfig(newConfig)
+    setConfigText(JSON.stringify(newConfig, null, 2))
+  }
+
   const handleSaveConfig = async () => {
     setLoading(true)
     try {
-      const parsed = JSON.parse(configText)
-      const { error } = await supabase.from('site_config').insert([{ config: parsed, version_name: 'Manual Update' }])
+      // Use the live siteConfig state which is kept in sync with the GUI
+      const { error } = await supabase.from('site_config').insert([{ config: siteConfig, version_name: 'GUI Update' }])
       if (error) throw error
-      setMessage('Site configuration saved! A new version history point was created.')
+      setMessage('Configuration deployed successfully!')
       fetchConfig()
     } catch(err) {
-      setMessage('Invalid JSON or Database Error: ' + err.message)
+      setMessage('Error: ' + err.message)
     }
     setLoading(false)
   }
@@ -235,21 +210,104 @@ export default function Dashboard({ session }) {
 
         <section className="admin-section">
           <h2>TOTAL ARCHITECTURE CONTROL</h2>
-          <p className="admin-muted">Modify the raw configuration of the website below. Use the button to automatically generate new sections with assigned 3D globe scrolling variables.</p>
-          
-          <div style={{ marginTop: '1.5rem', marginBottom: '1rem' }}>
-            <button onClick={handleAddDynamicSection} className="admin-btn active-btn" style={{ marginRight: '1rem' }}>+ ADD NEW SECTION (AUTO 3D)</button>
+          <div className="admin-tabs">
+            <button className={`tab-btn ${activeTab === 'hero' ? 'active' : ''}`} onClick={() => setActiveTab('hero')}>HERO</button>
+            <button className={`tab-btn ${activeTab === 'about' ? 'active' : ''}`} onClick={() => setActiveTab('about')}>ABOUT</button>
+            <button className={`tab-btn ${activeTab === 'tech' ? 'active' : ''}`} onClick={() => setActiveTab('tech')}>TECH</button>
+            <button className={`tab-btn ${activeTab === 'sections' ? 'active' : ''}`} onClick={() => setActiveTab('sections')}>SECTIONS</button>
+            <button className={`tab-btn ${activeTab === 'json' ? 'active' : ''}`} onClick={() => setActiveTab('json')}>RAW JSON</button>
           </div>
 
-          <textarea 
-            className="admin-input textarea" 
-            style={{ width: '100%', height: '300px', fontFamily: 'monospace', fontSize: '12px' }}
-            value={configText} 
-            onChange={(e) => setConfigText(e.target.value)}
-          />
+          <div className="tab-content" style={{ marginTop: '2rem' }}>
+            {siteConfig && activeTab === 'hero' && (
+              <div className="admin-form">
+                <div className="form-row">
+                  <div className="form-group"><label>Eyebrow</label><input className="admin-input" value={siteConfig.hero.eyebrow} onChange={e => updateConfigField('hero.eyebrow', e.target.value)} /></div>
+                  <div className="form-group"><label>Badge</label><input className="admin-input" value={siteConfig.hero.badge} onChange={e => updateConfigField('hero.badge', e.target.value)} /></div>
+                </div>
+                <div className="form-row">
+                  <div className="form-group"><label>Name Line 1</label><input className="admin-input" value={siteConfig.hero.name1} onChange={e => updateConfigField('hero.name1', e.target.value)} /></div>
+                  <div className="form-group"><label>Name Line 2</label><input className="admin-input" value={siteConfig.hero.name2} onChange={e => updateConfigField('hero.name2', e.target.value)} /></div>
+                </div>
+                <div className="form-group">
+                  <label>Role Description</label>
+                  <textarea className="admin-input textarea" value={siteConfig.hero.role} onChange={e => updateConfigField('hero.role', e.target.value)} />
+                </div>
+              </div>
+            )}
 
-          <button onClick={handleSaveConfig} disabled={loading} className="admin-btn active-btn" style={{ marginTop: '1rem' }}>
-            {loading ? 'SAVING...' : 'PUBLISH CONFIGURATION'}
+            {siteConfig && activeTab === 'about' && (
+              <div className="admin-form">
+                <div className="form-row">
+                  <div className="form-group"><label>Date of Birth</label><input type="date" className="admin-input" value={siteConfig.about.dob} onChange={e => updateConfigField('about.dob', e.target.value)} /></div>
+                  <div className="form-group"><label>Location</label><input className="admin-input" value={siteConfig.about.location} onChange={e => updateConfigField('about.location', e.target.value)} /></div>
+                </div>
+                <div className="form-group"><label>Heading</label><textarea className="admin-input textarea" value={siteConfig.about.heading} onChange={e => updateConfigField('about.heading', e.target.value)} /></div>
+                <div className="form-group"><label>Body Text</label><textarea className="admin-input textarea" value={siteConfig.about.body} onChange={e => updateConfigField('about.body', e.target.value)} /></div>
+              </div>
+            )}
+
+            {siteConfig && activeTab === 'tech' && (
+              <div className="admin-list">
+                {siteConfig.tech.map((t, idx) => (
+                  <div key={idx} className="admin-item" style={{ marginBottom: '1rem', background: 'rgba(255,255,255,0.03)' }}>
+                    <div className="item-info" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1rem', width: '100%', marginBottom: '0.5rem' }}>
+                      <input className="admin-input" placeholder="Name" value={t.name} onChange={e => {
+                        const newTech = [...siteConfig.tech]; newTech[idx].name = e.target.value; updateConfigField('tech', newTech)
+                      }} />
+                      <input className="admin-input" placeholder="Level" value={t.level} onChange={e => {
+                        const newTech = [...siteConfig.tech]; newTech[idx].level = e.target.value; updateConfigField('tech', newTech)
+                      }} />
+                      <input className="admin-input" placeholder="Icon ID" value={t.icon} onChange={e => {
+                        const newTech = [...siteConfig.tech]; newTech[idx].icon = e.target.value; updateConfigField('tech', newTech)
+                      }} />
+                    </div>
+                    <button className="admin-btn delete-btn" onClick={() => {
+                       const newTech = siteConfig.tech.filter((_, i) => i !== idx); updateConfigField('tech', newTech)
+                    }}>REMOVE</button>
+                  </div>
+                ))}
+                <button className="admin-btn active-btn" onClick={() => {
+                  const newTech = [...siteConfig.tech, { name: "New Tool", level: "Beginner", icon: "Code2" }];
+                  updateConfigField('tech', newTech)
+                }}>+ ADD TECH</button>
+              </div>
+            )}
+
+            {siteConfig && activeTab === 'sections' && (
+              <div className="admin-list">
+                {siteConfig.sections.map((s, idx) => (
+                  <div key={idx} className="admin-item" style={{ marginBottom: '1rem' }}>
+                    <div className="item-info">
+                      <input className="admin-input" style={{ width: '200px' }} value={s.lbl} onChange={e => {
+                        const newSec = [...siteConfig.sections]; newSec[idx].lbl = e.target.value; updateConfigField('sections', newSec)
+                      }} />
+                      <span className="admin-item-meta">{s.type} Section</span>
+                    </div>
+                    <button className="admin-btn logout-btn" style={{ marginLeft: '1rem' }} onClick={() => {
+                        const newSec = siteConfig.sections.filter((_, i) => i !== idx); updateConfigField('sections', newSec)
+                    }} disabled={s.type === 'Hero'}>DELETE</button>
+                  </div>
+                ))}
+                <button onClick={handleAddDynamicSection} className="admin-btn active-btn">+ AUTO-ALLOCATE NEW 3D SECTION</button>
+              </div>
+            )}
+
+            {activeTab === 'json' && (
+              <textarea 
+                className="admin-input textarea" 
+                style={{ width: '100%', height: '400px', fontFamily: 'monospace', fontSize: '11px' }}
+                value={configText} 
+                onChange={(e) => {
+                  setConfigText(e.target.value);
+                  try { setSiteConfig(JSON.parse(e.target.value)); } catch(e){}
+                }}
+              />
+            )}
+          </div>
+
+          <button onClick={handleSaveConfig} disabled={loading} className="admin-btn active-btn" style={{ marginTop: '2rem', width: '100%', padding: '1.2rem' }}>
+            {loading ? 'UPLOADING ARCHITECTURE...' : 'PUBLISH ALL CHANGES TO LIVE SITE'}
           </button>
         </section>
 

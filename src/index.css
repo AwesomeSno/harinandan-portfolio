@@ -368,3 +368,56 @@ nav { opacity: 0; animation: fadeUp 1s .5s forwards; pointer-events: all; }
   .power-subheading { font-size: 0.55rem; padding: 0 1.5rem; margin-bottom: 2.5rem; line-height: 1.5; }
   .power-action { padding: 0.7rem 1.4rem; font-size: 0.55rem; }
 }
+
+/* ── ADMIN GUI STYLES ────────────────────────────── */
+.admin-tabs {
+  display: flex;
+  gap: 0.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.tab-btn {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #8899ac;
+  padding: 0.6rem 1.2rem;
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.tab-btn:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+}
+
+.tab-btn.active {
+  background: #00d4ff;
+  color: #010408;
+  border-color: #00d4ff;
+  box-shadow: 0 0 15px rgba(0, 212, 255, 0.3);
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: #00d4ff;
+  margin-bottom: 0.6rem;
+  opacity: 0.8;
+}
+
+.item-info input.admin-input {
+  background: rgba(1, 4, 8, 0.4);
+}
+
