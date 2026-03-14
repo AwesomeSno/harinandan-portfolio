@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from 'react'
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react'
 import { ConfigProvider, useConfig } from './utils/ConfigContext'
 import Boot from './components/Boot'
 import Background from './components/Background'
@@ -17,14 +17,16 @@ function MainApp() {
   const { config, loading: configLoading } = useConfig()
   const rawSections = config.sections || []
   
-  // Safety Fallback: If DB is empty or sections are missing, use the default cinematic layout
-  const SECTIONS = rawSections.length > 0 ? rawSections : [
-    { type: "Hero", lbl: "01 — Intro", cam: { x: 0, y: 0, z: 22 }, tgt: { x: 0, y: 0 }, fog: 0.016 },
-    { type: "About", lbl: "02 — Identity", cam: { x: 13, y: 2, z: 15 }, tgt: { x: 0, y: 0 }, fog: 0.022 },
-    { type: "Work", lbl: "03 — Work", cam: { x: -11, y: -3, z: 17 }, tgt: { x: -2, y: -1 }, fog: 0.02 },
-    { type: "Stack", lbl: "04 — Stack", cam: { x: 5, y: 9, z: 15 }, tgt: { x: 0, y: 2 }, fog: 0.024 },
-    { type: "Contact", lbl: "05 — Contact", cam: { x: 0, y: 0, z: 25 }, tgt: { x: 0, y: 0 }, fog: 0.013 }
-  ]
+  // Safety Fallback: Memoized to prevent Background re-renders
+  const SECTIONS = useMemo(() => {
+    return rawSections.length > 0 ? rawSections : [
+      { type: "Hero", lbl: "01 — Intro", cam: { x: 0, y: 0, z: 22 }, tgt: { x: 0, y: 0 }, fog: 0.016 },
+      { type: "About", lbl: "02 — Identity", cam: { x: 13, y: 2, z: 15 }, tgt: { x: 0, y: 0 }, fog: 0.022 },
+      { type: "Work", lbl: "03 — Work", cam: { x: -11, y: -3, z: 17 }, tgt: { x: -2, y: -1 }, fog: 0.02 },
+      { type: "Stack", lbl: "04 — Stack", cam: { x: 5, y: 9, z: 15 }, tgt: { x: 0, y: 2 }, fog: 0.024 },
+      { type: "Contact", lbl: "05 — Contact", cam: { x: 0, y: 0, z: 25 }, tgt: { x: 0, y: 0 }, fog: 0.013 }
+    ]
+  }, [rawSections])
   const [bootDone, setBootDone]           = useState(false)
   const [currentSection, setCurrentSection] = useState(0)
   const [heroFade, setHeroFade]           = useState({ opacity: 0, ty: 30 })

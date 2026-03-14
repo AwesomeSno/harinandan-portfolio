@@ -41,7 +41,12 @@ body { background: var(--void); color: var(--text); font-family: var(--display);
 .blink { animation: blink .8s step-start infinite; }
 
 /* ── CANVAS ────────────────────────────────────────── */
-#canvas-container { position: fixed; inset: 0; z-index: 0; }
+#canvas-container { 
+  position: fixed; 
+  inset: 0; 
+  z-index: 0; 
+  background: radial-gradient(circle at center, #050b18 0%, #010408 100%);
+}
 canvas { display: block; }
 
 /* ── OVERLAYS ──────────────────────────────────────── */
